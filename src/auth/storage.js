@@ -27,16 +27,18 @@ function storageAvailable(type) {
 
 export function storeInLocalStorage(key, value) {
   if (!storageAvailable('localStorage')) {
-    throw new Error('localStorage is not supported by this browser.');
-  }
-
-  if (typeof key !== 'string' || typeof value !== 'string') {
-    throw new Error(
-      `One or both of the provided key '${key}' and value '${value}' is/are not string(s).`
-    );
+    throw new Error('LocalStorage is not supported by this browser.');
   }
 
   localStorage.setItem(key, value);
+}
+
+export function retrieveFromLocalStorage(key) {
+  if (!storageAvailable('localStorage')) {
+    throw new Error('LocalStorage is not supported by this browser.');
+  }
+
+  return localStorage.getItem(key);
 }
 
 export function clearLocalStorage() {

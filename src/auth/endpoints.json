@@ -1,0 +1,9 @@
+{
+  "github": {
+    "authEndpoint": "https://github.com/login/oauth/authorize",
+    "accessTokenEndpoint": "https://github.com/login/oauth/access_token",
+    "client_id": "f1dab68eb987086a083e",
+    "client_secret": "652f7614f318340c4399fa342b6c93d14406deb3",
+    "redirect_uri": "http://localhost:8000"
+  }
+}
