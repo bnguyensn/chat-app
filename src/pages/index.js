@@ -3,7 +3,6 @@ import { useAppDispatch, useAppState } from '../store/appContext';
 import Layout from '../components/app/layout';
 import checkRedirect from '../auth/redirect';
 import Button from '../components/app/button';
-import { requestAuthCode } from '../auth';
 
 export default function Index() {
   const appState = useAppState();
@@ -14,7 +13,7 @@ export default function Index() {
   });
 
   const handleLogIn = () => {
-    requestAuthCode('github');
+    fetch('http://localhost:5000/auth/login?provider=github');
   };
 
   return (
