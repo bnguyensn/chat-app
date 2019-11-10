@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'gatsby';
-import { useAppState } from '../../store/appContext';
+import { useAppState } from '../../store';
 
 export default function Header({ siteTitle }) {
   const appState = useAppState();

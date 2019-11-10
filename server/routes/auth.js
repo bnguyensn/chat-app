@@ -5,9 +5,9 @@ const authControllers = require('../controllers/auth');
 
 const router = express.Router();
 
-router.get('/login', asyncWrapper(authControllers.requestAuthCode));
-router.get(
-  '/redirect',
+router.get('/nonce', asyncWrapper(authControllers.getNonce));
+router.post(
+  '/token',
   authMiddlewares.injectAuthItems,
   asyncWrapper(authControllers.requestAuthToken)
 );

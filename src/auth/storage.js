@@ -25,7 +25,7 @@ function storageAvailable(type) {
   }
 }
 
-export function storeInLocalStorage(key, value) {
+export function storeInStorage(key, value) {
   if (!storageAvailable('localStorage')) {
     throw new Error('LocalStorage is not supported by this browser.');
   }
@@ -33,7 +33,7 @@ export function storeInLocalStorage(key, value) {
   localStorage.setItem(key, value);
 }
 
-export function retrieveFromLocalStorage(key) {
+export function retrieveFromStorage(key) {
   if (!storageAvailable('localStorage')) {
     throw new Error('LocalStorage is not supported by this browser.');
   }
@@ -41,6 +41,14 @@ export function retrieveFromLocalStorage(key) {
   return localStorage.getItem(key);
 }
 
-export function clearLocalStorage() {
+export function deleteFromStorage(key) {
+  if (!storageAvailable('localStorage')) {
+    throw new Error('LocalStorage is not supported by this browser.');
+  }
+
+  localStorage.removeItem(key);
+}
+
+export function clearStorage() {
   localStorage.clear();
 }

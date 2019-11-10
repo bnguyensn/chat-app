@@ -1,41 +1,30 @@
 import React, { useContext, useReducer } from 'react';
+import authActions from './actions/auth';
+import authReducers, {
+  defaultState as defaultAuthState,
+} from './reducers/auth';
+
+const AppStateContext = React.createContext();
+const AppDispatchContext = React.createContext();
 
 const defaultAppState = {
-  accessToken: undefined,
-  user: undefined,
+  auth: defaultAuthState,
 };
-export const AppStateContext = React.createContext();
-export const AppDispatchContext = React.createContext();
 
 export const actions = {
-  UPDATE_ACCESS_TOKEN: '@AUTH/UPDATE_ACCESS_TOKEN',
-  UPDATE_USER: '@AUTH/UPDATE_USER',
+  auth: authActions,
 };
 
 function appReducer(state, action) {
-  switch (action.type) {
-    case actions.UPDATE_ACCESS_TOKEN: {
-      return {
-        ...state,
-        accessToken: action.payload,
-      };
-    }
-    case actions.UPDATE_USER: {
-      return {
-        ...state,
-        user: action.payload,
-      };
-    }
-    default: {
-      return state;
-    }
-  }
+  return {
+    auth: authReducers(state.auth, action),
+  };
 }
 
 export function useAppState() {
   const context = useContext(AppStateContext);
 
-  if (context === 'undefined') {
+  if (context === undefined) {
     throw new Error('useAppState must be used within an AppProvider');
   }
 
@@ -45,7 +34,7 @@ export function useAppState() {
 export function useAppDispatch() {
   const context = useContext(AppDispatchContext);
 
-  if (context === 'undefined') {
+  if (context === undefined) {
     throw new Error('useAppDispatch must be used within an AppProvider');
   }
 

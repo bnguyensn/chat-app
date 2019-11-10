@@ -1,43 +1,22 @@
-import { storeInLocalStorage } from './storage';
+import endpoints from './endpoints.json';
 
-async function createState() {
-  const algorithm = {
-    name: 'RSA-OAEP',
-    modulusLength: 4096,
-    publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
-    hash: 'SHA-256',
-  };
+/**
+ * Create a query string from a query object.
+ *
+ * @param {object} queryObj - An object with key-value pairs representing a
+ * query string's key-value pairs
+ *
+ * @returns {string} - The query string created from the provided query object
+ */
+export function createQueryString(queryObj) {
+  return Object.keys(queryObj).reduce((finalQueryString, queryKey, index) => {
+    if (typeof queryObj[queryKey] !== 'boolean' && !queryObj[queryKey]) {
+      return finalQueryString;
+    }
 
-  return await crypto.subtle.generateKey(algorithm, true, ['encrypt']);
-}
+    const queryValue = encodeURIComponent(queryObj[queryKey]);
+    const ampersand = index === 0 ? '' : '&';
 
-function convertObjToQueryParamsString(obj) {
-  return Object.keys(obj).reduce((queryParamsString, key, index, keys) => {
-    const connector = index === keys.length - 1 ? '' : '&';
-    return `${queryParamsString}${key}=${encodeURIComponent(
-      obj[key]
-    )}${connector}`;
+    return `${finalQueryString}${ampersand}${queryKey}=${queryValue}`;
   }, '');
-}
-
-export default async function getOAuthQueryParamsString({ login }) {
-  // This can also be referred to as the 'nonce'.
-  // TODO: implement
-  // const cryptoKey = await createState();
-
-  const state = 'abcdef';
-
-  // Store the state in LocalStorage
-  storeInLocalStorage('state', state);
-
-  // https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#parameters
-  const oauthParams = {
-    client_id: 'f1dab68eb987086a083e',
-    redirect_uri: 'http://localhost:8000',
-    login,
-    state,
-    allow_signup: true,
-  };
-
-  return convertObjToQueryParamsString(oauthParams);
 }
