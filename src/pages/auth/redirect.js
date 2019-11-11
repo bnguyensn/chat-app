@@ -33,11 +33,11 @@ export default function Redirect() {
   // }, [appState, accessTokenState, dispatch]);
 
   return (
-    <Layout>
-      <AppProvider>
+    <AppProvider>
+      <Layout>
         <RedirectComponent />
         <StateDisplay />
-      </AppProvider>
-    </Layout>
+      </Layout>
+    </AppProvider>
   );
 }

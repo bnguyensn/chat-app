@@ -6,11 +6,11 @@ import StateDisplay from '../components/state/stateDisplay';
 
 export default function Index() {
   return (
-    <Layout>
-      <AppProvider>
+    <AppProvider>
+      <Layout>
         <Auth />
         <StateDisplay />
-      </AppProvider>
-    </Layout>
+      </Layout>
+    </AppProvider>
   );
 }

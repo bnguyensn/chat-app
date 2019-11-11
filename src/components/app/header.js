@@ -1,19 +1,19 @@
 import React from 'react';
 import { Link } from 'gatsby';
 import { useAppState } from '../../store';
+import Avatar from './avatar';
 
-export default function Header({ siteTitle }) {
+export default function Header() {
   const appState = useAppState();
-  const { user } = appState;
+  const { user = {} } = appState;
+  const { avatar_url } = user;
 
   return (
-    <header>
-      <div>
-        <h1>
-          <Link to="/">{siteTitle}</Link>
-        </h1>
-      </div>
-      <div>Current user: {user}</div>
+    <header className="flex justify-center p-4 bg-gray-600">
+      <h1 className="mx-8">
+        <Link to="/">GitHub OAuth App</Link>
+      </h1>
+      <Avatar src={avatar_url} />
     </header>
   );
 }
