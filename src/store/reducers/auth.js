@@ -1,6 +1,7 @@
 import actions from '../actions/auth';
 
 export const defaultState = {
+  provider: null,
   tokens: null,
   user: null,
 };

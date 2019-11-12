@@ -4,6 +4,11 @@
     "accessTokenEndpoint": "https://github.com/login/oauth/access_token",
     "client_id": "f1dab68eb987086a083e",
     "redirect_uri": "http://localhost:8000/auth/redirect",
-    "providerSpecifics": ["login", "allow_signup"]
+    "providerSpecifics": ["login", "allow_signup"],
+    "userDetailsEndpoint": "https://api.github.com/user",
+    "userDetailsAvatarField": "avatar_url",
+    "defaultAPIHeaders": {
+      "Accept": "application/vnd.github.v3+json"
+    }
   }
 }

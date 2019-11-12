@@ -88,11 +88,27 @@ export async function requestAuthentication(provider, opts) {
 
   // Store the current page so the user can be re-directed correctly upon
   // successful authentication
-  storeInStorage('authPreAuthPage', location.href);
+  storeInStorage('authPreAuthPage', location.pathname);
 
   location.href = `${providerDetails.authEndpoint}?${queryString}`;
 }
 
+/**
+ * Request access token from a provider. The request actually goes through our
+ * API server before hitting the provider's authentication endpoint. This is
+ * step #2 of the OAuth 2.0 authentication code flow.
+ *
+ * @param {object} config - A config object containing necessary information for
+ * our API server to derive the appropriate access token request. This include
+ * providing the authentication provider's name, the authentication code
+ * received in step #1, and the authentication state. This is also the last time
+ * the authentication state will be used in the authentication flow.
+ * @param dispatch - A dispatch function to modify the state store when the
+ * access token response is received.
+ *
+ * @returns {Promise<void>} - Will return a Promise as this is an async
+ * function, but the Promise wont' resolve to anything.
+ */
 export async function requestAccessToken({ provider, code, state }, dispatch) {
   // Compare state
   if (retrieveFromStorage('authState') !== state) {
@@ -100,10 +116,6 @@ export async function requestAccessToken({ provider, code, state }, dispatch) {
   }
 
   // ---------- Request token ---------- //
-
-  console.log(`provider: ${provider}`);
-  console.log(`code: ${code}`);
-  console.log(`state: ${state}`);
 
   const tokenRes = await fetch('http://localhost:5000/auth/token', {
     method: 'POST',
@@ -117,41 +129,31 @@ export async function requestAccessToken({ provider, code, state }, dispatch) {
     }),
   });
 
+  // ---------- Handle response ---------- //
+
   if (!tokenRes.ok) {
     cleanUpAuthStorage();
 
     throw new Error(await tokenRes.text());
   }
 
-  cleanUpAuthStorage();
+  const tokenDetails = await tokenRes.json();
 
-  const token = await tokenRes.json();
+  // We no longer need the state (nonce) value in our authentication flow.
+  deleteFromStorage('authState');
 
   dispatch({
     type: actions.UPDATE_TOKENS,
-    payload: token,
+    payload: tokenDetails,
   });
 }
 
+/**
+ * Clean up local storage. This should be performed whenever an authentication
+ * cycle is complete (or aborted).
+ */
 function cleanUpAuthStorage() {
   deleteFromStorage('authState');
   deleteFromStorage('authProvider');
   deleteFromStorage('authPreAuthPage');
-}
-
-/**
- * Given a url string and a query parameter name, try to extract the query
- * parameter value.
- *
- * @param {string} url - A DOMString representing a web page URL
- * @param {string} queryParamName - A query parameter name to find in the web
- * page URL
- * @returns {boolean | string} - Return false if no code query parameter was
- * found, or the code value if found
- */
-export function extractQueryParam(url, queryParamName) {
-  const regex = new RegExp(`(${queryParamName}=)([^&]+)`);
-  const matches = url.match(regex);
-
-  return Array.isArray(matches) && matches.length === 3 && matches[2];
 }
